@@ -53,19 +53,17 @@ class LinkedInConnector(BaseConnector):
         return unique
 
     def _build_queries(self) -> list[tuple[str, str]]:
-        filters = self.config.get("filters", {})
-        titles = filters.get("target_titles", [
+        # Use search-optimized titles (properly capitalized for LinkedIn search)
+        search_titles = [
             "Director of Engineering",
             "VP Engineering",
             "Head of Engineering",
             "Head of Platform",
             "Head of Infrastructure",
-        ])
+        ]
         locations = ["Dubai", "United Arab Emirates", "Riyadh", "Saudi Arabia"]
 
-        key_titles = titles[:5]
-        key_locs = locations[:3]
-        return [(t, l) for t in key_titles[:2] for l in key_locs[:2]]
+        return [(t, l) for t in search_titles[:2] for l in locations[:2]]
 
     async def _scrape_query(self, context, title: str, location: str) -> list[dict]:
         """Scrape one search query across multiple pages."""

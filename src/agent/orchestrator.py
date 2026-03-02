@@ -238,6 +238,14 @@ class JobHunterOrchestrator:
                             success=False,
                             error="Email send failed",
                         )
+            else:
+                if not self.dry_run and job_id > 0:
+                    self.db.save_notification(
+                        job_id=job_id,
+                        email_to=self.email_service.to_email,
+                        success=False,
+                        error=f"Score below threshold: {final_score:.0f} < {self.min_score}",
+                    )
 
         except Exception as e:
             logger.error(f"Scoring failed for '{job['title']}': {e}")

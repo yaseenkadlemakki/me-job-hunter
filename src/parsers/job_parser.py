@@ -16,8 +16,8 @@ SALARY_PATTERNS = [
     # AED ranges
     r"(?:AED|aed)\s*[\d,]+\s*[-–to]+\s*[\d,]+(?:\s*(?:AED|aed))?",
     r"[\d,]+\s*[-–to]+\s*[\d,]+\s*(?:AED|aed)",
-    # USD ranges
-    r"(?:USD|\$)\s*[\d,]+(?:k|K)?\s*[-–to]+\s*[\d,]+(?:k|K)?",
+    # USD ranges (with or without second $ sign)
+    r"(?:USD|\$)\s*[\d,]+(?:k|K)?\s*[-–to]+\s*(?:USD|\$)?\s*[\d,]+(?:k|K)?",
     r"[\d,]+(?:k|K)?\s*[-–to]+\s*[\d,]+(?:k|K)?\s*(?:USD|\$)",
     # SAR ranges
     r"(?:SAR|sar)\s*[\d,]+\s*[-–to]+\s*[\d,]+",
@@ -171,6 +171,6 @@ class JobParser:
         """Detect seniority level from title and description."""
         text = (title + " " + description[:500]).lower()
         for level, keywords in SENIOR_KEYWORDS.items():
-            if any(kw in text for kw in keywords):
+            if any(re.search(r'\b' + re.escape(kw) + r'\b', text) for kw in keywords):
                 return level
         return "unknown"

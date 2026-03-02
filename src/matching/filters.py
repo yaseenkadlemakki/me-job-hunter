@@ -128,15 +128,15 @@ class JobFilter:
         """Quick seniority score without LLM."""
         title_lower = title.lower()
         for kw in SENIORITY_LEVELS["executive"]:
-            if kw in title_lower:
+            if re.search(r'\b' + re.escape(kw) + r'\b', title_lower):
                 return 95
         for kw in SENIORITY_LEVELS["vp"]:
-            if kw in title_lower:
+            if re.search(r'\b' + re.escape(kw) + r'\b', title_lower):
                 return 90
         for kw in SENIORITY_LEVELS["director"]:
-            if kw in title_lower:
+            if re.search(r'\b' + re.escape(kw) + r'\b', title_lower):
                 return 85
         for kw in SENIORITY_LEVELS["manager"]:
-            if kw in title_lower:
+            if re.search(r'\b' + re.escape(kw) + r'\b', title_lower):
                 return 50
         return 30

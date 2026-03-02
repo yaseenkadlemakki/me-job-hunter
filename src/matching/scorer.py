@@ -121,7 +121,7 @@ class Scorer:
                 return self._default_score()
 
             final = self._calculate_final_score(scores)
-            scores["final_score"] = round(final, 1)
+            scores["final_score"] = round(final, 2)
 
             logger.info(
                 f"Scored: '{job_data.get('title')}' @ '{job_data.get('company')}' "
@@ -134,7 +134,7 @@ class Scorer:
             raise
 
     def _build_prompt(self, job_data: dict, candidate: dict) -> str:
-        desc = (job_data.get("description") or "")[:3000]
+        desc = (job_data.get("description") or "")[:2000]
         skills = ", ".join(candidate.get("skills", [])[:20])
 
         return SCORING_PROMPT_TEMPLATE.format(

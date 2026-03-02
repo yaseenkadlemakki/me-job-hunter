@@ -1,5 +1,7 @@
 """Per-site async rate limiter with jitter."""
 
+from __future__ import annotations
+
 import asyncio
 import random
 import time

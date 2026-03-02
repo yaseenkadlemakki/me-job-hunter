@@ -7,6 +7,11 @@ from typing import Optional
 
 from src.utils.logger import setup_logger
 
+try:
+    from sentence_transformers import SentenceTransformer
+except Exception:
+    SentenceTransformer = None
+
 logger = setup_logger("embeddings")
 
 _model = None
@@ -17,7 +22,6 @@ def _get_model():
     global _model
     if _model is None:
         try:
-            from sentence_transformers import SentenceTransformer
             _model = SentenceTransformer("all-MiniLM-L6-v2")
             logger.info("Loaded sentence-transformer model: all-MiniLM-L6-v2")
         except Exception as e:

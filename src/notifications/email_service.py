@@ -44,7 +44,7 @@ class EmailService:
             return False
 
         if not self.app_password:
-            logger.warning("GMAIL_APP_PASSWORD not set — skipping email")
+            logger.warning("GMAIL_APP_PASSWORD not set  - skipping email")
             return False
 
         subject = self._build_subject(job_data, score_data)
@@ -59,7 +59,7 @@ class EmailService:
 
     def send_test_email(self) -> bool:
         """Send a test email to verify configuration."""
-        subject = "Job Hunter — Test Email"
+        subject = "Job Hunter - Test Email"
         html = """
         <html><body>
         <h2>Job Hunter is configured correctly!</h2>
@@ -67,7 +67,7 @@ class EmailService:
         <p><em>Sent at: {now}</em></p>
         </body></html>
         """.format(now=datetime.utcnow().strftime("%Y-%m-%d %H:%M UTC"))
-        text = f"Job Hunter test email — sent at {datetime.utcnow().strftime('%Y-%m-%d %H:%M UTC')}"
+        text = f"Job Hunter test email  - sent at {datetime.utcnow().strftime('%Y-%m-%d %H:%M UTC')}"
         return self._send(subject, html, text)
 
     def send_digest(self, jobs: list[dict]) -> bool:
@@ -76,7 +76,7 @@ class EmailService:
             logger.info("No jobs to include in digest")
             return False
 
-        subject = f"Job Hunter Daily Digest — {len(jobs)} Top Matches ({datetime.utcnow().strftime('%Y-%m-%d')})"
+        subject = f"Job Hunter Daily Digest  - {len(jobs)} Top Matches ({datetime.utcnow().strftime('%Y-%m-%d')})"
         html = self._build_digest_html(jobs)
         text = self._build_digest_text(jobs)
         return self._send(subject, html, text)
@@ -86,7 +86,7 @@ class EmailService:
         title = job_data.get("title", "Unknown Role")
         company = job_data.get("company", "Unknown Company")
         location = job_data.get("location", "")
-        return f"[Score: {score}/100] {title} at {company} — {location}"
+        return f"[Score: {score}/100] {title} at {company} - {location}"
 
     def _build_html_body(self, job_data: dict, score_data: dict) -> str:
         score = score_data.get("final_score", 0)
@@ -151,7 +151,7 @@ class EmailService:
   <div class="content">
     <h2 class="job-title">{job_data.get('title', 'N/A')}</h2>
     <p class="company">{job_data.get('company', 'N/A')}</p>
-    <p class="location">📍 {job_data.get('location', 'N/A')}</p>
+    <p class="location">Location: {job_data.get('location', 'N/A')}</p>
 
     <div class="meta-grid">
       <div class="meta-item">
@@ -198,11 +198,11 @@ class EmailService:
     <div class="description">{description}</div>
 
     <div class="cta">
-      <a href="{job_data.get('url', '#')}">View Full Job Posting →</a>
+      <a href="{job_data.get('url', '#')}">View Full Job Posting &rarr;</a>
     </div>
   </div>
   <div class="footer">
-    Sent by Job Hunter Agent • {datetime.utcnow().strftime('%Y-%m-%d %H:%M UTC')}
+    Sent by Job Hunter Agent - {datetime.utcnow().strftime('%Y-%m-%d %H:%M UTC')}
   </div>
 </div>
 </body>
@@ -213,7 +213,7 @@ class EmailService:
         score = score_data.get("final_score", 0)
         comp_display = _comp_display(job_data.get("salary_raw"), job_data.get("salary_estimated_aed"))
         return (
-            f"NEW JOB MATCH — Score: {score:.0f}/100\n"
+            f"NEW JOB MATCH  - Score: {score:.0f}/100\n"
             f"{'='*60}\n\n"
             f"Title: {job_data.get('title', 'N/A')}\n"
             f"Company: {job_data.get('company', 'N/A')}\n"
@@ -268,7 +268,7 @@ class EmailService:
 </body></html>"""
 
     def _build_digest_text(self, jobs: list[dict]) -> str:
-        lines = [f"Job Hunter Digest — {len(jobs)} matches — {datetime.utcnow().strftime('%Y-%m-%d')}", "="*60]
+        lines = [f"Job Hunter Digest  - {len(jobs)} matches  - {datetime.utcnow().strftime('%Y-%m-%d')}", "="*60]
         for j in jobs:
             lines.append(
                 f"\n[{j.get('relevance_score',0):.0f}/100] {j.get('title','')} @ {j.get('company','')}\n"
@@ -284,8 +284,8 @@ class EmailService:
         msg["From"] = self.from_email
         msg["To"] = self.to_email
 
-        msg.attach(MIMEText(text_body, "plain", "utf-8"))
-        msg.attach(MIMEText(html_body, "html", "utf-8"))
+        msg.attach(MIMEText(text_body, "plain", "latin-1"))
+        msg.attach(MIMEText(html_body, "html", "latin-1"))
 
         try:
             with smtplib.SMTP(self.smtp_host, self.smtp_port, timeout=30) as server:
@@ -295,7 +295,7 @@ class EmailService:
                 server.login(self.from_email, self.app_password)
                 server.sendmail(self.from_email, self.to_email, msg.as_string())
 
-            logger.info(f"Email sent: '{subject}' → {self.to_email}")
+            logger.info(f"Email sent: '{subject}' to {self.to_email}")
             return True
         except smtplib.SMTPAuthenticationError:
             logger.error(

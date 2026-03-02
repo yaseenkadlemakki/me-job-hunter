@@ -16,11 +16,14 @@ logger = setup_logger("scheduler")
 class JobHunterScheduler:
     """Periodic scheduler that runs the agent on a configurable interval."""
 
-    def __init__(self, orchestrator, config: dict = None):
+    def __init__(self, orchestrator, config: dict = None, interval_hours: int = None):
         self.orchestrator = orchestrator
         self.config = config or {}
         scheduler_cfg = config.get("scheduler", {}) if config else {}
-        self.interval_hours = scheduler_cfg.get("interval_hours", 6)
+        if interval_hours is not None:
+            self.interval_hours = interval_hours
+        else:
+            self.interval_hours = scheduler_cfg.get("interval_hours", 6)
         self.scheduler = AsyncIOScheduler(timezone="UTC")
         self._running = False
 

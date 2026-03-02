@@ -12,6 +12,11 @@ from chromadb.config import Settings
 
 from src.utils.logger import setup_logger
 
+try:
+    from chromadb.utils.embedding_functions import SentenceTransformerEmbeddingFunction
+except Exception:
+    SentenceTransformerEmbeddingFunction = None
+
 logger = setup_logger("vector_store")
 
 
@@ -37,11 +42,11 @@ class VectorStore:
         # Use provided embedding function or default (sentence-transformers)
         if embedding_function is None:
             try:
-                from chromadb.utils.embedding_functions import SentenceTransformerEmbeddingFunction
-                embedding_function = SentenceTransformerEmbeddingFunction(
-                    model_name="all-MiniLM-L6-v2"
-                )
-                logger.info("Using SentenceTransformer embeddings (all-MiniLM-L6-v2)")
+                if SentenceTransformerEmbeddingFunction is not None:
+                    embedding_function = SentenceTransformerEmbeddingFunction(
+                        model_name="all-MiniLM-L6-v2"
+                    )
+                    logger.info("Using SentenceTransformer embeddings (all-MiniLM-L6-v2)")
             except Exception as e:
                 logger.warning(f"Could not load SentenceTransformer: {e}. Using default embeddings.")
                 embedding_function = None
