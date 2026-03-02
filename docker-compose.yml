@@ -1,0 +1,42 @@
+version: "3.9"
+
+services:
+  job-hunter:
+    build: .
+    container_name: job-hunter
+    restart: unless-stopped
+    command: ["schedule"]
+    env_file:
+      - .env
+    volumes:
+      - ./data:/app/data
+      - ./logs:/app/logs
+      - ./resume.pdf:/app/resume.pdf:ro
+    environment:
+      - PYTHONUNBUFFERED=1
+      - LOG_LEVEL=INFO
+    # Uncomment to limit resources
+    # deploy:
+    #   resources:
+    #     limits:
+    #       memory: 2g
+    #       cpus: "1.0"
+
+  # Optional: run a single search cycle and exit
+  job-hunter-run:
+    build: .
+    container_name: job-hunter-run
+    profiles: ["run"]
+    command: ["run"]
+    env_file:
+      - .env
+    volumes:
+      - ./data:/app/data
+      - ./logs:/app/logs
+      - ./resume.pdf:/app/resume.pdf:ro
+    environment:
+      - PYTHONUNBUFFERED=1
+
+volumes:
+  data:
+  logs:

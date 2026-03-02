@@ -1,0 +1,126 @@
+candidate:
+  name: "Yaseen Kadlemakki"
+  email: "yaseenkadlemakki@gmail.com"
+  current_comp_usd: 600000
+  target_comp_aed: 1200000
+  linkedin: "https://www.linkedin.com/in/yaseenkadlemakki/"
+  current_role: "Director of Engineering"
+  current_company: "Juniper Networks"
+  location: "Greater Boston, MA"
+  target_location: "Middle East"
+  skills:
+    - "Cloud (AWS)"
+    - "Kubernetes"
+    - "DevOps"
+    - "SRE"
+    - "Platform Engineering"
+    - "AI/ML"
+    - "MLOps"
+    - "CrewAI"
+    - "Agentic Development"
+    - "CI/CD"
+    - "Terraform"
+    - "Infrastructure"
+    - "Developer Productivity"
+    - "Networking"
+  industries:
+    - "Enterprise SaaS"
+    - "Networking"
+    - "Cloud Infrastructure"
+    - "Datacenter"
+  team_size: 75
+  education:
+    - "MBA - University of New Hampshire"
+    - "B.E. - Visvesvaraya Technological University"
+
+filters:
+  min_relevance_score: 80
+  target_locations:
+    - "Dubai"
+    - "Abu Dhabi"
+    - "Riyadh"
+    - "Saudi Arabia"
+    - "UAE"
+    - "United Arab Emirates"
+    - "Middle East"
+    - "Doha"
+    - "Qatar"
+    - "Kuwait"
+    - "Bahrain"
+    - "Oman"
+  target_titles:
+    - "Director"
+    - "Senior Director"
+    - "VP Engineering"
+    - "Vice President"
+    - "Head of Engineering"
+    - "Head of Platform"
+    - "Head of Infrastructure"
+    - "Head of DevOps"
+    - "Head of Networking"
+    - "CTO"
+    - "Chief Technology Officer"
+    - "Engineering Director"
+    - "Platform Director"
+    - "Infrastructure Director"
+  excluded_locations:
+    - "Israel"
+    - "Tel Aviv"
+  excluded_regions:
+    - "IL"
+  min_team_size: null
+  require_senior_level: true
+
+scoring_weights:
+  skill_overlap: 0.30
+  seniority_alignment: 0.25
+  industry_alignment: 0.15
+  compensation_confidence: 0.15
+  location_relevance: 0.15
+
+scheduler:
+  interval_hours: 6
+  max_jobs_per_run: 50
+  timezone: "UTC"
+
+rate_limits:
+  linkedin: 3.0
+  indeed: 2.0
+  bayt: 2.0
+  gulftarget: 2.0
+  naukrigulf: 2.0
+  default: 2.0
+
+scraper:
+  headless: true
+  timeout_ms: 30000
+  max_pages: 5
+  user_agents:
+    - "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+    - "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+    - "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:121.0) Gecko/20100101 Firefox/121.0"
+    - "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.2 Safari/605.1.15"
+    - "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+
+llm:
+  scoring_model: "claude-3-5-haiku-20241022"
+  deep_scoring_model: "claude-sonnet-4-6"
+  max_tokens: 2048
+  temperature: 0.1
+
+vector_store:
+  collection_name: "job_postings"
+  embedding_model: "all-MiniLM-L6-v2"
+  persist_directory: "./data/chroma"
+  n_results: 10
+
+notifications:
+  send_email: true
+  min_score_for_email: 80
+  batch_notifications: false
+  daily_digest: false
+  digest_hour: 8
+
+database:
+  url: "sqlite:///./data/job_hunter.db"
+  echo: false
